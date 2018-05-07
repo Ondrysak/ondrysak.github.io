@@ -1,7 +1,7 @@
 Title: Making world a better place with Sentry!
 Date: 2018-05-07 12:01
 Modified: 2018-05-07 13:01
-Category: technology
+Category: Technology
 Tags: technology, sentry
 Slug: Sentry
 Authors: Ondřej Naňka
