@@ -1,8 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Ondřej Naňka</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2018-05-07T19:01:00+02:00</updated><entry><title>Legion TD MEGA x10 v3.9f boss units</title><link href="/Legion.html" rel="alternate"></link><published>2018-05-07T18:01:00+02:00</published><updated>2018-05-07T19:01:00+02:00</updated><author><name>Ondřej Naňka</name></author><id>tag:None,2018-05-07:/Legion.html</id><summary type="html">&lt;p&gt;Top boss units in Legion TD&lt;/p&gt;</summary><content type="html">&lt;p&gt;Legion TD MEGA x10 v3.9f is great tower defense mode in Warcraft 3.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Ondřej Naňka</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2018-05-07T19:05:00+02:00</updated><entry><title>Pelican with Github</title><link href="/github-pelican.html" rel="alternate"></link><published>2018-05-07T19:03:00+02:00</published><updated>2018-05-07T19:05:00+02:00</updated><author><name>Ondřej Naňka</name></author><id>tag:None,2018-05-07:/github-pelican.html</id><summary type="html">&lt;p&gt;What is Pelican, how to use it with Github&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hello fellaz, I am sure you would love to make a wonder page like this one using Pelican and Github. Let's do it!&lt;/p&gt;
+&lt;p&gt;You will need a Linux machine with python and pip and a regular Github user account.  &lt;/p&gt;
+&lt;h1&gt;STEP BY STEP&lt;/h1&gt;
+&lt;p&gt;First you need to create a repo named YOUR_GITHUB_USERNAME.github.io&lt;/p&gt;
+&lt;p&gt;Clone it to your local linux machine&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone https://github.com/YOUR_GITHUB_USERNAME/YOUR_GITHUB_USERNAME.github.io.git
+&lt;span class="c1"&gt;#mine was like this&lt;/span&gt;
+&lt;span class="c1"&gt;#git clone git@github.com:Ondrysak/ondrysak.github.io.git&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Go into the cloned repo&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; YOUR_GITHUB_USERNAME.github.io
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Create a new branch as we want to preserve master for the html output of Pelican&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git checkout -b pelican
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install python packages &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pelican markdown ghp-import
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Run pelican quick start&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pelican-quickstart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Something like this should follow&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; Where do you want to create your new web site? [.] ./
+&amp;gt; What will be the title of this web site? Ondrysak&amp;#39;s blog
+&amp;gt; Who will be the author of this web site? Ondrysak
+&amp;gt; What will be the default language of this web site? [pt] en
+&amp;gt; Do you want to specify a URL prefix? e.g., http://example.com   (Y/n) n
+&amp;gt; Do you want to enable article pagination? (Y/n) y
+&amp;gt; How many articles per page do you want? [10] 10
+&amp;gt; What is your time zone? [Europe/Paris] 
+&amp;gt; Do you want to generate a Fabfile/Makefile to automate generation and publishing? (Y/n) Y 
+&amp;gt; Do you want an auto-reload &amp;amp; simpleHTTP script to assist with theme and site development? (Y/n) n
+&amp;gt; Do you want to upload your website using FTP? (y/N) n
+&amp;gt; Do you want to upload your website using SSH? (y/N) n
+&amp;gt; Do you want to upload your website using Dropbox? (y/N) n
+&amp;gt; Do you want to upload your website using S3? (y/N) n
+&amp;gt; Do you want to upload your website using Rackspace Cloud Files? (y/N) n
+&amp;gt; Do you want to upload your website using GitHub Pages? (y/N) y
+&amp;gt; Is this your personal page (username.github.io)? (y/N) y
+Done. Your new project is available at /home/username/YOUR_GITHUB_USERNAME.github.io
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Go to content folder and create a file &lt;em&gt;first.md&lt;/em&gt; in your favorite editor&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Title&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;My&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="n"&gt;article&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;
+&lt;span class="n"&gt;Date&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;2018&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;05&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;07&lt;/span&gt; &lt;span class="mi"&gt;09&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;01&lt;/span&gt;
+&lt;span class="n"&gt;Modified&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;2018&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;05&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;07&lt;/span&gt; &lt;span class="mi"&gt;09&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;01&lt;/span&gt;
+&lt;span class="n"&gt;Category&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Technology&lt;/span&gt;
+&lt;span class="n"&gt;Tags&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;technology&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dope&lt;/span&gt;
+&lt;span class="n"&gt;Slug&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;
+&lt;span class="n"&gt;Authors&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Me&lt;/span&gt; &lt;span class="n"&gt;myself&lt;/span&gt;
+&lt;span class="n"&gt;Summary&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;What&lt;/span&gt; &lt;span class="k"&gt;is&lt;/span&gt; &lt;span class="n"&gt;love&lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;
+
+
+&lt;span class="n"&gt;Hello&lt;/span&gt; &lt;span class="n"&gt;fellaz&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;u&lt;/span&gt; &lt;span class="n"&gt;did&lt;/span&gt; &lt;span class="n"&gt;not&lt;/span&gt; &lt;span class="n"&gt;hear&lt;/span&gt; &lt;span class="n"&gt;about&lt;/span&gt; &lt;span class="n"&gt;love&lt;/span&gt; &lt;span class="n"&gt;its&lt;/span&gt; &lt;span class="n"&gt;cool&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To generate html and try the web on localhost go to back to the folder with the generated Makefile&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;make html 
+make serve
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Add, commit and push the changes in the source to the &lt;em&gt;pelican&lt;/em&gt; branch&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git add . &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git commit -m &lt;span class="s1"&gt;&amp;#39;first commit to da branch yo&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; git push
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Push the generated html to master using Makefile&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;make github
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Say woohoo and checkout your new page at YOUR_GITHUB_USERNAME.github.io!&lt;/p&gt;</content><category term="python"></category><category term="pelican"></category><category term="github"></category></entry><entry><title>Legion TD MEGA x10 v3.9f boss units</title><link href="/Legion.html" rel="alternate"></link><published>2018-05-07T18:01:00+02:00</published><updated>2018-05-07T19:01:00+02:00</updated><author><name>Ondřej Naňka</name></author><id>tag:None,2018-05-07:/Legion.html</id><summary type="html">&lt;p&gt;Top boss units in Legion TD&lt;/p&gt;</summary><content type="html">&lt;p&gt;Legion TD MEGA x10 v3.9f is great tower defense mode in Warcraft 3.&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://darkweaver-at-legionx10.blogspot.cz/"&gt;Be sure to checkout full guide from clan DE&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;I am going to list the most useful units for first two boss levels as lvl 30 requires more than just good towers.&lt;/p&gt;
-&lt;h5&gt;Level 10&lt;/h5&gt;
+&lt;h1&gt;Level 10&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;Riders (mass)&lt;/li&gt;
 &lt;li&gt;Tuskarr spearman (mass)&lt;/li&gt;
@@ -22,7 +106,7 @@
 &lt;li&gt;Greymane (blockade + ranged support/disable)&lt;/li&gt;
 &lt;li&gt;Zeus (mass)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h5&gt;Level 20&lt;/h5&gt;
+&lt;h1&gt;Level 20&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;Phoenix (mass)&lt;/li&gt;
 &lt;li&gt;Royal Griffin (mass)&lt;/li&gt;
@@ -58,7 +142,7 @@
 
 
 &lt;p&gt;It's done, congrats you just made world a better place.&lt;/p&gt;
-&lt;p&gt;Other supported platforms are &lt;/p&gt;
+&lt;h1&gt;Other supported platforms&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;C#&lt;/li&gt;
 &lt;li&gt;Cocoa&lt;/li&gt;
@@ -77,7 +161,7 @@
 &lt;li&gt;Ruby&lt;/li&gt;
 &lt;li&gt;Rust&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Sentry is also integrated with the following:&lt;/p&gt;
+&lt;h1&gt;Integration with&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;Asana&lt;/li&gt;
 &lt;li&gt;Bitbucket&lt;/li&gt;
