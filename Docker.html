@@ -19,7 +19,8 @@
                 <h1><a href="/">Ondřej Naňka </a></h1>
                 <nav><ul>
                     <li><a href="/pages/About-me.html">About me</a></li>
-                    <li class="active"><a href="/category/technology.html">technology</a></li>
+                    <li><a href="/category/games.html">Games</a></li>
+                    <li class="active"><a href="/category/technology.html">Technology</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 <section id="content" class="body">
@@ -43,14 +44,49 @@
         <address class="vcard author">
                 By                         <a class="url fn" href="/author/ondrej-nanka.html">Ondřej Naňka</a>
         </address>
-<p>In <a href="/category/technology.html">technology</a>.</p>
+<p>In <a href="/category/technology.html">Technology</a>.</p>
 <p>tags: <a href="/tag/technology.html">technology</a> <a href="/tag/docker.html">docker</a> </p>
 </footer><!-- /.post-info -->      <p>Hello fellaz, if u did not hear about Docker before now its the time to change it!</p>
-<p>Virtualization is cool, Docker is cool++. Lets list some basic commands you can play around with, I will talk about them more in depth later.</p>
+<p>Virtualization is cool, Docker is cool++. </p>
+<h2>Dockerfile</h2>
+<p>Docker can build images automatically by reading the instructions from a Dockerfile. A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. Using docker build users can create an automated build that executes several command-line instructions in succession. See example of Dockerfile to run flask app using gunicorn WSGI below.</p>
+<div class="highlight"><pre><span></span><span class="k">FROM</span><span class="s"> alpine:3.6</span>
+<span class="k">ENV</span><span class="s"> LANG C.UTF-8</span>
+<span class="k">ENV</span><span class="s"> FLASK_APP=pyrest</span>
+<span class="k">ENV</span><span class="s"> FLASK_DEBUG=true</span>
+<span class="k">RUN</span> apk add --no-cache py-gunicorn python curl <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    python -m ensurepip <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    rm -r /usr/lib/python*/ensurepip <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    pip install --upgrade pip setuptools <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    rm -r /root/.cache
+COPY . /app
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">RUN</span> pip install .
+<span class="k">CMD</span><span class="s"> [&quot;gunicorn&quot;, &quot;-w&quot;, &quot;4&quot;, &quot;-b&quot;, &quot;0.0.0.0:5000&quot;, &quot;pyrest:app&quot;]</span>
+</pre></div>
+
+
+<h1>FROM</h1>
+<p>The FROM instruction initializes a new build stage and sets the Base Image for subsequent instructions. As such, a valid Dockerfile must start with a FROM instruction. The image can be any valid image – it is especially easy to start by pulling an image from the Public Repositories.</p>
+<h1>ENV</h1>
+<p>The ENV instruction sets the environment variable <key> to the value <value>. This value will be in the environment for all subsequent instructions in the build stage and can be replaced inline in many as well.</p>
+<h1>COPY</h1>
+<p>The COPY instruction copies new files or directories from <src> and adds them to the filesystem of the container at the path <dest>.</p>
+<h1>WORKDIR</h1>
+<p>The WORKDIR instruction sets the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions that follow it in the Dockerfile. If the WORKDIR doesn’t exist, it will be created even if it’s not used in any subsequent Dockerfile instruction.
+The WORKDIR instruction can be used multiple times in a Dockerfile. If a relative path is provided, it will be relative to the path of the previous WORKDIR instruction. For example:</p>
+<h1>RUN</h1>
+<p>The RUN instruction will execute any commands in a new layer on top of the current image and commit the results. The resulting committed image will be used for the next step in the Dockerfile.</p>
+<h1>CMD</h1>
+<p>There can only be one CMD instruction in a Dockerfile. If you list more than one CMD then only the last CMD will take effect.</p>
+<p>The main purpose of a CMD is to provide defaults for an executing container. These defaults can include an executable, or they can omit the executable, in which case you must specify an ENTRYPOINT instruction as well.</p>
+<h2>Docker commands</h2>
+<p>Lets list some basic commands you can play around with, I will talk about them more in depth later.</p>
 <div class="highlight"><pre><span></span>docker build
 docker images 
 docker run
 docker stop
+docker <span class="nb">exec</span>
 docker ps
 docker rm
 docker inspect
@@ -59,7 +95,32 @@ docker push
 </pre></div>
 
 
-<p>Wow, article so long already, dig in documentation for more info.</p>
+<h1>docker build</h1>
+<p>Is used for building a image</p>
+<h1>docker images</h1>
+<p>The default docker images will show all top level images, their repository and tags, and their size.</p>
+<p>Docker images have intermediate layers that increase reusability, decrease disk usage, and speed up docker build by allowing each step to be cached. These intermediate layers are not shown by default.</p>
+<h1>docker run</h1>
+<p>The docker run command first creates a writeable container layer over the specified image, and then starts it using the specified command. That is, docker run is equivalent to the API /containers/create then /containers/(id)/start. A stopped container can be restarted with all its previous changes intact using docker start. See docker ps -a to view a list of all containers.</p>
+<h1>docker stop</h1>
+<p>The main process inside the container will receive SIGTERM, and after a grace period, SIGKILL.</p>
+<h1>docker exec</h1>
+<p>The docker exec command runs a new command in a running container.</p>
+<p>The command started using docker exec only runs while the container’s primary process (PID 1) is running, and it is not restarted if the container is restarted.</p>
+<p>COMMAND will run in the default directory of the container. If the underlying image has a custom directory specified with the WORKDIR directive in its Dockerfile, this will be used instead.</p>
+<h1>docker ps</h1>
+<p>List containers</p>
+<h1>docker rm</h1>
+<p>Remove one or more containers</p>
+<h1>docker inspect</h1>
+<p>Docker inspect provides detailed information on constructs controlled by Docker.</p>
+<p>By default, docker inspect will render results in a JSON array.</p>
+<h1>docker pull</h1>
+<p>Most of your images will be created on top of a base image from the Docker Hub registry.</p>
+<p>Docker Hub contains many pre-built images that you can pull and try without needing to define and configure your own.</p>
+<p>To download a particular image, or set of images (i.e., a repository), use docker pull.</p>
+<h1>docker push</h1>
+<p>Use docker push to share your images to the Docker Hub registry or to a self-hosted one.</p>
 <p><a href="https://docs.docker.com/install/overview/">Docker docs</a></p>
     </div><!-- /.entry-content -->
 
