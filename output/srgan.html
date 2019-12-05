@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Ondřej Naňka - Technology</title>
+        <title>SRGAN for video</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
 </head>
 
@@ -18,10 +18,15 @@
                     <li class="active"><a href="/category/technology.html">Technology</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/srgan.html" rel="bookmark"
+           title="Permalink to SRGAN for video">SRGAN for video</a></h1>
+    </header>
 
-            <aside id="featured" class="body">
-                <article>
-                    <h1 class="entry-title"><a href="/srgan.html">SRGAN for video</a></h1>
+    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2019-12-05T09:01:00+01:00">
                 Published: Thu 05 December 2019
@@ -36,7 +41,7 @@
         </address>
 <p>In <a href="/category/technology.html">Technology</a>.</p>
 <p>tags: <a href="/tag/technology.html">technology</a> <a href="/tag/ml.html">ml</a> <a href="/tag/gan.html">gan</a> <a href="/tag/srgan.html">srgan</a> </p>
-</footer><!-- /.post-info --><h1>Introduction</h1>
+</footer><!-- /.post-info -->      <h1>Introduction</h1>
 <p>The highly challenging task of estimating a high-resolution (HR) image from its
 low-resolution (LR)counterpart is referred to as super-resolution (SR). SR
 received substantial attention from within the computer vision research
@@ -78,66 +83,11 @@ community and has a wide range of applications. This post will guide you trough 
         <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imresize</span><span class="p">(</span><span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">],</span> <span class="p">[</span><span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="n">downscale</span><span class="p">,</span> <span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="n">downscale</span><span class="p">],</span> <span class="n">interp</span><span class="o">=</span><span class="s1">&#39;bicubic&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">None</span><span class="p">))</span>
     <span class="n">images_lr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
 <span class="k">return</span> <span class="n">images_lr</span>
-</pre></div>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</pre></div>
+    </div><!-- /.entry-content -->
 
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/Sentry.html" rel="bookmark"
-                           title="Permalink to Making world a better place with Sentry!">Making world a better place with Sentry!</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-05-07T12:01:00+02:00">
-                Published: Mon 07 May 2018
-        </abbr>
-		<br />
-        <abbr class="modified" title="2018-05-07T13:01:00+02:00">
-                Updated: Mon 07 May 2018
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/ondrej-nanka.html">Ondřej Naňka</a>
-        </address>
-<p>In <a href="/category/technology.html">Technology</a>.</p>
-<p>tags: <a href="/tag/technology.html">technology</a> <a href="/tag/sentry.html">sentry</a> </p>
-</footer><!-- /.post-info -->                <p>What is Sentry, what does it do?</p>
-                <a class="readmore" href="/Sentry.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="/Docker.html" rel="bookmark"
-                           title="Permalink to Docker is love!">Docker is love!</a></h1>
-                </header>
-
-                <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2018-05-07T09:01:00+02:00">
-                Published: Mon 07 May 2018
-        </abbr>
-		<br />
-        <abbr class="modified" title="2018-05-07T09:01:00+02:00">
-                Updated: Mon 07 May 2018
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/ondrej-nanka.html">Ondřej Naňka</a>
-        </address>
-<p>In <a href="/category/technology.html">Technology</a>.</p>
-<p>tags: <a href="/tag/technology.html">technology</a> <a href="/tag/docker.html">docker</a> </p>
-</footer><!-- /.post-info -->                <p>What is Docker, what does it do?</p>
-                <a class="readmore" href="/Docker.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
-                </ol><!-- /#posts-list -->
-                </section><!-- /#content -->
+  </article>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>

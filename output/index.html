@@ -4,10 +4,6 @@
         <meta charset="utf-8" />
         <title>Ondřej Naňka</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
-
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
 </head>
 
 <body id="index" class="home">
@@ -25,14 +21,84 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/Legion.html">Legion TD MEGA x10 v3.9f boss units</a></h1>
+                    <h1 class="entry-title"><a href="/srgan.html">SRGAN for video</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2019-12-05T09:01:00+01:00">
+                Published: Thu 05 December 2019
+        </abbr>
+		<br />
+        <abbr class="modified" title="2019-12-05T09:01:00+01:00">
+                Updated: Thu 05 December 2019
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/ondrej-nanka.html">Ondřej Naňka</a>
+        </address>
+<p>In <a href="/category/technology.html">Technology</a>.</p>
+<p>tags: <a href="/tag/technology.html">technology</a> <a href="/tag/ml.html">ml</a> <a href="/tag/gan.html">gan</a> <a href="/tag/srgan.html">srgan</a> </p>
+</footer><!-- /.post-info --><h1>Introduction</h1>
+<p>The highly challenging task of estimating a high-resolution (HR) image from its
+low-resolution (LR)counterpart is referred to as super-resolution (SR). SR
+received substantial attention from within the computer vision research
+community and has a wide range of applications. This post will guide you trough the process of using SRGAN for this task.</p>
+<h1>Preprocessing</h1>
+<p>Data data data</p>
+<h2>Cropping</h2>
+<p>First we need to crop the images to 200*200 pixels, because bigger images caused our hardware to run out of memory.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="kn">from</span> <span class="nn">resizeimage</span> <span class="kn">import</span> <span class="n">resizeimage</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;drive/My Drive/COCO_DATASET&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.jpg&quot;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;drive/My Drive/COCO_DATASET/&#39;</span><span class="o">+</span><span class="nb">file</span><span class="p">,</span> <span class="s1">&#39;r+b&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+              <span class="k">with</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">as</span> <span class="n">image</span><span class="p">:</span>
+                  <span class="n">cover</span> <span class="o">=</span> <span class="n">resizeimage</span><span class="o">.</span><span class="n">resize_crop</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
+                  <span class="n">cover</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;drive/My Drive/COCO_DATASET_CROP2/&quot;</span><span class="o">+</span><span class="nb">file</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+              <span class="k">pass</span>
+</pre></div>
+
+
+<h2>Downscaling</h2>
+<p>To obtain low resolution images for training we will use bicubic downscaling, see the code below.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">imresize</span>
+<span class="c1"># Takes list of images and provide HR images in form of numpy array</span>
+<span class="k">def</span> <span class="nf">hr_images</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+    <span class="n">images_hr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">images_hr</span>
+
+<span class="c1"># Takes list of images and provide LR images in form of numpy array</span>
+<span class="k">def</span> <span class="nf">lr_images</span><span class="p">(</span><span class="n">images_real</span> <span class="p">,</span> <span class="n">downscale</span><span class="p">):</span>   
+    <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span>  <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images_real</span><span class="p">)):</span>
+        <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imresize</span><span class="p">(</span><span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">],</span> <span class="p">[</span><span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="n">downscale</span><span class="p">,</span> <span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="n">downscale</span><span class="p">],</span> <span class="n">interp</span><span class="o">=</span><span class="s1">&#39;bicubic&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">None</span><span class="p">))</span>
+    <span class="n">images_lr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">images_lr</span>
+</pre></div>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/Legion.html" rel="bookmark"
+                           title="Permalink to Legion TD MEGA x10 v3.9f boss units">Legion TD MEGA x10 v3.9f boss units</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-07T18:01:00+02:00">
-                Published: Po 07 květen 2018
+                Published: Mon 07 May 2018
         </abbr>
 		<br />
         <abbr class="modified" title="2018-05-07T19:01:00+02:00">
-                Updated: Po 07 květen 2018
+                Updated: Mon 07 May 2018
         </abbr>
 
         <address class="vcard author">
@@ -40,54 +106,10 @@
         </address>
 <p>In <a href="/category/games.html">Games</a>.</p>
 <p>tags: <a href="/tag/warcraft3.html">warcraft3</a> <a href="/tag/legion.html">legion</a> </p>
-</footer><!-- /.post-info --><p>Legion TD MEGA x10 v3.9f is great tower defense mode in Warcraft 3.</p>
-<p><a href="http://darkweaver-at-legionx10.blogspot.cz/">Be sure to checkout full guide from clan DE</a></p>
-<p>I am going to list the most useful units for first two boss levels as lvl 30 requires more than just good towers.</p>
-<h5>Level 10</h5>
-<ol>
-<li>Riders (mass)</li>
-<li>Tuskarr spearman (mass)</li>
-<li>Hydra (mass)</li>
-<li>Alpha (mass)</li>
-<li>Tree of branch (mass)</li>
-<li>Krogoth (mass)</li>
-<li>Fire Archers (mass)</li>
-<li>Mistress (support, single)</li>
-<li>Gnoll barrage™(support)</li>
-<li>Ogre barrage (support)</li>
-<li>Magnataur/tree of time (support)</li>
-<li>Ascendant/blood orc warlock/villain (support)</li>
-<li>Revenants (mass)</li>
-<li>Harpies/Medusas (support)</li>
-<li>Auras (support)</li>
-<li>Greymane (blockade + ranged support/disable)</li>
-<li>Zeus (mass)</li>
-</ol>
-<h5>Level 20</h5>
-<ol>
-<li>Phoenix (mass)</li>
-<li>Royal Griffin (mass)</li>
-<li>Mercurial (mass)</li>
-<li>Mistress (single)</li>
-<li>Hydra (mass)</li>
-<li>Harpy (support)</li>
-<li>High Priest (mass + tanks)</li>
-<li>Assault tanks (mass + magic damage behind)</li>
-<li>Ascendant (support)</li>
-<li>Tree of travel (support)</li>
-<li>Blood orc/villain (support)</li>
-<li>Auras in general (captain, troll, etc)</li>
-<li>Riders (mass/support)</li>
-<li>Big foot (support)</li>
-<li>Warden (mass)</li>
-<li>Greymane (blockade + long range support)</li>
-</ol>
-<p>You may catch me ingame on (ghostplay.de)[https://ghostplay.de/stats/]</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</footer><!-- /.post-info -->                <p>Top boss units in Legion TD</p>
+                <a class="readmore" href="/Legion.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
@@ -98,11 +120,11 @@
                 <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-07T12:01:00+02:00">
-                Published: Po 07 květen 2018
+                Published: Mon 07 May 2018
         </abbr>
 		<br />
         <abbr class="modified" title="2018-05-07T13:01:00+02:00">
-                Updated: Po 07 květen 2018
+                Updated: Mon 07 May 2018
         </abbr>
 
         <address class="vcard author">
@@ -124,11 +146,11 @@
                 <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-07T09:01:00+02:00">
-                Published: Po 07 květen 2018
+                Published: Mon 07 May 2018
         </abbr>
 		<br />
         <abbr class="modified" title="2018-05-07T09:01:00+02:00">
-                Updated: Po 07 květen 2018
+                Updated: Mon 07 May 2018
         </abbr>
 
         <address class="vcard author">

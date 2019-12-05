@@ -4,10 +4,6 @@
         <meta charset="utf-8" />
         <title>Ondřej Naňka - docker</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
-
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
 </head>
 
 <body id="index" class="home">
@@ -28,11 +24,11 @@
                     <h1 class="entry-title"><a href="/Docker.html">Docker is love!</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2018-05-07T09:01:00+02:00">
-                Published: Po 07 květen 2018
+                Published: Mon 07 May 2018
         </abbr>
 		<br />
         <abbr class="modified" title="2018-05-07T09:01:00+02:00">
-                Updated: Po 07 květen 2018
+                Updated: Mon 07 May 2018
         </abbr>
 
         <address class="vcard author">
@@ -45,18 +41,18 @@
 <h2>Dockerfile</h2>
 <p>Docker can build images automatically by reading the instructions from a Dockerfile. A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. Using docker build users can create an automated build that executes several command-line instructions in succession. See example of Dockerfile to run flask app using gunicorn WSGI below.</p>
 <div class="highlight"><pre><span></span><span class="k">FROM</span><span class="s"> alpine:3.6</span>
-<span class="k">ENV</span><span class="s"> LANG C.UTF-8</span>
-<span class="k">ENV</span><span class="s"> FLASK_APP=pyrest</span>
-<span class="k">ENV</span><span class="s"> FLASK_DEBUG=true</span>
+<span class="k">ENV</span> LANG C.UTF-8
+<span class="k">ENV</span> <span class="nv">FLASK_APP</span><span class="o">=</span>pyrest
+<span class="k">ENV</span> <span class="nv">FLASK_DEBUG</span><span class="o">=</span><span class="nb">true</span>
 <span class="k">RUN</span> apk add --no-cache py-gunicorn python curl <span class="o">&amp;&amp;</span> <span class="se">\</span>
     python -m ensurepip <span class="o">&amp;&amp;</span> <span class="se">\</span>
     rm -r /usr/lib/python*/ensurepip <span class="o">&amp;&amp;</span> <span class="se">\</span>
     pip install --upgrade pip setuptools <span class="o">&amp;&amp;</span> <span class="se">\</span>
     rm -r /root/.cache
-COPY . /app
+<span class="k">COPY</span> . /app
 <span class="k">WORKDIR</span><span class="s"> /app</span>
 <span class="k">RUN</span> pip install .
-<span class="k">CMD</span><span class="s"> [&quot;gunicorn&quot;, &quot;-w&quot;, &quot;4&quot;, &quot;-b&quot;, &quot;0.0.0.0:5000&quot;, &quot;pyrest:app&quot;]</span>
+<span class="k">CMD</span> <span class="p">[</span><span class="s2">&quot;gunicorn&quot;</span><span class="p">,</span> <span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0.0.0:5000&quot;</span><span class="p">,</span> <span class="s2">&quot;pyrest:app&quot;</span><span class="p">]</span>
 </pre></div>
 
 
