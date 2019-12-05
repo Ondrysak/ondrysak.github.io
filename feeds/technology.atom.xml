@@ -47,7 +47,7 @@ mv val2017/* &lt;span class="s1"&gt;&amp;#39;drive/My Drive/COCO_DATASET/&amp;#3
 &lt;h1&gt;Model&lt;/h1&gt;
 &lt;p&gt;Here the main code for defining both generator and discriminator will be present together with the vgg based loss function. If you are not intrested in the implementation feel free to skip this part. Also &lt;/p&gt;
 &lt;h2&gt;Architecture&lt;/h2&gt;
-&lt;p&gt;The images below are the best way to see the architecture of the network, if you want to read more about the architecture of this network be sure to read the paper [Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network] (https://arxiv.org/abs/1609.04802)&lt;/p&gt;
+&lt;p&gt;The images below are the best way to see the architecture of the network, if you want to read more about the architecture of this network be sure to read the paper &lt;a href="https://arxiv.org/abs/1609.04802"&gt;Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;GAN in general&lt;/h3&gt;
 &lt;p&gt;A generative adversarial network (GAN) is a class of machine learning systems invented by Ian Goodfellow and his colleagues in 2014. Two neural networks contest with each other in a game (in the sense of game theory, often but not always in the form of a zero-sum game). Given a training set, this technique learns to generate new data with the same statistics as the training set. For example, a GAN trained on photographs can generate new photographs that look at least superficially authentic to human observers, having many realistic characteristics. Though originally proposed as a form of generative model for unsupervised learning, GANs have also proven useful for semi-supervised learning, fully supervised learning, and reinforcement learning. In a 2016 seminar, Yann LeCun described GANs as "the coolest idea in machine learning in the last twenty years".&lt;/p&gt;
 &lt;p&gt;The image below show the general architecture of any GAN.&lt;/p&gt;
@@ -210,7 +210,7 @@ mv val2017/* &lt;span class="s1"&gt;&amp;#39;drive/My Drive/COCO_DATASET/&amp;#3
 &lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=yEZVtZFvirU&amp;amp;feature=youtu.be"&gt;Psychedelic face&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=Jooi5cuuFXo&amp;amp;feature=youtu.be"&gt;Fractal zoom&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;References&lt;/h1&gt;
-&lt;p&gt;[Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network] (https://arxiv.org/abs/1609.04802)&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://arxiv.org/abs/1609.04802"&gt;Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/kozistr/Awesome-GANs"&gt;Hyeongchan Kim, Awesome-GANs with Tensorflow, (2018), GitHub repository&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://github.com/deepak112/Keras-SRGAN"&gt;Deepak Birla, Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network implemented in Keras, (2018), GitHub repository&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://data.vision.ee.ethz.ch/cvl/DIV2K/"&gt;DIVerse 2K resolution high quality images as used for the challenges, Radu Timofte, Eirikur Agustsson, Shuhang Gu, Jiqing Wu, Andrey Ignatov, Luc VanGool&lt;/a&gt;&lt;/p&gt;
