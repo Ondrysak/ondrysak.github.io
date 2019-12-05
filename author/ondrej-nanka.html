@@ -42,16 +42,18 @@
 low-resolution (LR)counterpart is referred to as super-resolution (SR). SR
 received substantial attention from within the computer vision research
 community and has a wide range of applications. This post will guide you trough the process of using SRGAN for this task.</p>
-<h1>Preprocessing</h1>
-<p>Data data data</p>
+<h1>Getting the data and preprocessing</h1>
+<p>First we need to download and upack the data, here we are using the COCO dataset, but any image dataset with sufficiently large(200x200) can be used.</p>
+<div class="highlight"><pre><span></span>wget http://images.cocodataset.org/zips/val2017.zip
+unzip val2017.zip
+mv val2017/* <span class="s1">&#39;drive/My Drive/COCO_DATASET/&#39;</span>
+</pre></div>
+
+
+<p>I assume working with a Google Drive storage and Google Colab to actually run train the model, if you want to train the model locally it shouldnt be hard for you to modify the paths in the various parts of the following code.</p>
 <h2>Cropping</h2>
 <p>First we need to crop the images to 200*200 pixels, because bigger images caused our hardware to run out of memory.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
-
-<span class="kn">from</span> <span class="nn">resizeimage</span> <span class="kn">import</span> <span class="n">resizeimage</span>
-
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;drive/My Drive/COCO_DATASET&quot;</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;drive/My Drive/COCO_DATASET&quot;</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.jpg&quot;</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;drive/My Drive/COCO_DATASET/&#39;</span><span class="o">+</span><span class="nb">file</span><span class="p">,</span> <span class="s1">&#39;r+b&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -64,10 +66,8 @@ community and has a wide range of applications. This post will guide you trough 
 
 
 <h2>Downscaling</h2>
-<p>To obtain low resolution images for training we will use bicubic downscaling, see the code below.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
-<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">imresize</span>
-<span class="c1"># Takes list of images and provide HR images in form of numpy array</span>
+<p>To obtain low resolution images for training we will use bicubic downscaling, see the code below. First we load the images into numpy array and after that we use imresize from scipy.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Takes list of images and provide HR images in form of numpy array</span>
 <span class="k">def</span> <span class="nf">hr_images</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
     <span class="n">images_hr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">images_hr</span>
@@ -78,8 +78,182 @@ community and has a wide range of applications. This post will guide you trough 
     <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span>  <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images_real</span><span class="p">)):</span>
         <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imresize</span><span class="p">(</span><span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">],</span> <span class="p">[</span><span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="n">downscale</span><span class="p">,</span> <span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="n">downscale</span><span class="p">],</span> <span class="n">interp</span><span class="o">=</span><span class="s1">&#39;bicubic&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">None</span><span class="p">))</span>
     <span class="n">images_lr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
-<span class="k">return</span> <span class="n">images_lr</span>
-</pre></div>                </article>
+    <span class="k">return</span> <span class="n">images_lr</span>
+</pre></div>
+
+
+<h1>Model</h1>
+<p>Here the main code for defining both generator and discriminator will be present together with the vgg based loss function. If you are not intrested in the implementation feel free to skip this part. Also </p>
+<h2>Architecture</h2>
+<p>The images below are the best way to see the architecture of the network, if you want to read more about the architecture of this network be sure to read the paper [Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network] (https://arxiv.org/abs/1609.04802)</p>
+<h3>GAN in general</h3>
+<p>A generative adversarial network (GAN) is a class of machine learning systems invented by Ian Goodfellow and his colleagues in 2014. Two neural networks contest with each other in a game (in the sense of game theory, often but not always in the form of a zero-sum game). Given a training set, this technique learns to generate new data with the same statistics as the training set. For example, a GAN trained on photographs can generate new photographs that look at least superficially authentic to human observers, having many realistic characteristics. Though originally proposed as a form of generative model for unsupervised learning, GANs have also proven useful for semi-supervised learning, fully supervised learning, and reinforcement learning. In a 2016 seminar, Yann LeCun described GANs as "the coolest idea in machine learning in the last twenty years".</p>
+<p>The image below show the general architecture of any GAN.</p>
+<p><a href="/images/gan.jpeg">IMAGE OF GAN ARCHITECTURE</a></p>
+<p>To read more about GANs i can recommend reading the wikipedia article and also the original paper from Goodfellow. </p>
+<p><a href="https://en.wikipedia.org/wiki/Generative_adversarial_network">GAN on wikipedia</a></p>
+<p><a href="https://arxiv.org/pdf/1406.2661v1.pdf">Generative Adversarial Nets</a></p>
+<h3>SRGAN</h3>
+<p>The images linked below show the architecture of SRGAN as shown in the original paper mentioned above.</p>
+<p><a href="/images/srgan.jpeg">IMAGE OF GENERAL SRGAN ARCHITECTURE</a></p>
+<p><a href="/images/srgan_detail.jpeg">IMAGE OF DETAILED SRGAN ARCHITECTURE</a></p>
+<p>Some notes explaining a few maybe not so common terms used in the detailed image.</p>
+<ul>
+<li>
+<p><em>Residual blocks</em>: Since deeper networks are more difficult to train. The residual learning framework eases the training of these networks, and enables them to be substantially deeper, leading to improved performance. More about Residual blocks and Deep Residual learning can be found in paper given below. 16 residual blocks are used in Generator.</p>
+</li>
+<li>
+<p><em>PixelShuffler x2</em>: This is feature map upscaling. 2 sub-pixel CNN are used in Generator. Upscaling or Upsampling are same. There are various ways to do that. In code keras inbuilt function has been used.</p>
+</li>
+<li>
+<p><em>PRelu(Parameterized Relu)</em>: We are using PRelu in place of Relu or LeakyRelu. It introduces learn-able parameter that makes it possible to adaptively learn the negative part coefficient.</p>
+</li>
+<li>
+<p><em>k3n64s1</em> this means kernel 3, channels 64 and strides 1.</p>
+</li>
+</ul>
+<h2>Generator</h2>
+<p>The code below implements the generator model in keras.</p>
+<div class="highlight"><pre><span></span><span class="c1"># Residual block</span>
+<span class="k">def</span> <span class="nf">res_block_gen</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">kernal_size</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">strides</span><span class="p">):</span>    
+    <span class="n">gen</span> <span class="o">=</span> <span class="n">model</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="n">filters</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="n">kernal_size</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BatchNormalization</span><span class="p">(</span><span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+    <span class="c1"># Using Parametric ReLU</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">PReLU</span><span class="p">(</span><span class="n">alpha_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span> <span class="n">alpha_regularizer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alpha_constraint</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">shared_axes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="n">filters</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="n">kernal_size</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BatchNormalization</span><span class="p">(</span><span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">add</span><span class="p">([</span><span class="n">gen</span><span class="p">,</span> <span class="n">model</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">model</span>
+
+
+<span class="k">def</span> <span class="nf">up_sampling_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">kernal_size</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">strides</span><span class="p">):</span>
+
+    <span class="c1"># In place of Conv2D and UpSampling2D we can also use Conv2DTranspose (Both are used for Deconvolution)</span>
+    <span class="c1"># Even we can have our own function for deconvolution (i.e one made in Utils.py)</span>
+    <span class="c1">#model = Conv2DTranspose(filters = filters, kernel_size = kernal_size, strides = strides, padding = &quot;same&quot;)(model)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="n">filters</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="n">kernal_size</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">UpSampling2D</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span>
+
+<span class="k">class</span> <span class="nc">Generator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noise_shape</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_shape</span> <span class="o">=</span> <span class="n">noise_shape</span>
+    <span class="k">def</span> <span class="nf">generator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">gen_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_shape</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">gen_input</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">PReLU</span><span class="p">(</span><span class="n">alpha_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span> <span class="n">alpha_regularizer</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">alpha_constraint</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">shared_axes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">gen_model</span> <span class="o">=</span> <span class="n">model</span>
+
+        <span class="c1"># Using 16 Residual Blocks</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">res_block_gen</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">BatchNormalization</span><span class="p">(</span><span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">add</span><span class="p">([</span><span class="n">gen_model</span><span class="p">,</span> <span class="n">model</span><span class="p">])</span>
+
+        <span class="c1"># Using 2 UpSampling Blocks</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">up_sampling_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;tanh&#39;</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">generator_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">gen_input</span><span class="p">,</span> <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">generator_model</span>
+</pre></div>
+
+
+<h2>Discriminator</h2>
+<p>The code below implements the discriminator model in Keras.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">discriminator_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span><span class="p">):</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="n">filters</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BatchNormalization</span><span class="p">(</span><span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model</span>
+
+<span class="k">class</span> <span class="nc">Discriminator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_shape</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_shape</span> <span class="o">=</span> <span class="n">image_shape</span>
+
+    <span class="k">def</span> <span class="nf">discriminator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">dis_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_shape</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">dis_input</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">discriminator_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">discriminator_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">discriminator_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">discriminator_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">discriminator_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">discriminator_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">discriminator_block</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Flatten</span><span class="p">()(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">1024</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">)(</span><span class="n">model</span><span class="p">)</span> 
+
+        <span class="n">discriminator_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">dis_input</span><span class="p">,</span> <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">discriminator_model</span>
+</pre></div>
+
+
+<h2>VGG based loss function</h2>
+<p>This is the key part of the original SRGAN paper mentioned above, rather than using mean squared error on each pixel, we feed both the HR and SR images to a VGG network which generates features using convolution and as can be seen on the last line of the code below, we than use those features to compute the mean squared error.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">vgg_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="n">vgg19</span> <span class="o">=</span> <span class="n">VGG19</span><span class="p">(</span><span class="n">include_top</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;imagenet&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image_shape</span><span class="p">)</span>
+    <span class="n">vgg19</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">vgg19</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">vgg19</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">vgg19</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;block5_conv4&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span> <span class="o">-</span> <span class="n">model</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)))</span>
+</pre></div>
+
+
+<h1>Implementation and pretrained weights</h1>
+<p>The full implementation in form of Jupyter notebook can be found in this repo. Also I am making the pretrained model weights available, which I will try to update once i have a decently sized cluster available to train the network on properly sized dataset. The pretrained model weights available below, are result of training on a small subset of the coco dataset 600 images for training and 300 for testing.</p>
+<p><a href="https://gitlab.fit.cvut.cz/nankaond/mvi-sp">Git repository</a>
+<a href="https://drive.google.com/open?id=1RP-3tbBH4X8qRsdaJkdpx2DlYerMt5fI">Pretrained model weight</a></p>
+<h1>Results</h1>
+<p>The results below are output of the network after roughly 1900 epochs of training, which is roughly 3 days of training in the Google Colab environment.</p>
+<h2>On a single frame</h2>
+<p><a href="/images/dog.png">Dog</a></p>
+<h2>Actual SR videos</h2>
+<p><a href="https://www.youtube.com/watch?v=lvwLhzCRBEM&amp;feature=youtu.be">Sea dog and ball</a></p>
+<p><a href="https://www.youtube.com/watch?v=wRigzcSHP0M&amp;feature=youtu.be">Sheeps chewing</a></p>
+<p><a href="https://www.youtube.com/watch?v=r_LydST1hik&amp;feature=youtu.be">Jellyfish</a></p>
+<p><a href="https://www.youtube.com/watch?v=w7kJpZUnkI8&amp;feature=youtu.be">Dog</a></p>
+<p><a href="https://www.youtube.com/watch?v=yEZVtZFvirU&amp;feature=youtu.be">Psychedelic face</a></p>
+<p><a href="https://www.youtube.com/watch?v=Jooi5cuuFXo&amp;feature=youtu.be">Fractal zoom</a></p>
+<h1>References</h1>
+<p>[Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network] (https://arxiv.org/abs/1609.04802)</p>
+<p><a href="https://github.com/kozistr/Awesome-GANs">Hyeongchan Kim, Awesome-GANs with Tensorflow, (2018), GitHub repository</a></p>
+<p><a href="https://github.com/deepak112/Keras-SRGAN">Deepak Birla, Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network implemented in Keras, (2018), GitHub repository</a></p>
+<p><a href="https://data.vision.ee.ethz.ch/cvl/DIV2K/">DIVerse 2K resolution high quality images as used for the challenges, Radu Timofte, Eirikur Agustsson, Shuhang Gu, Jiqing Wu, Andrey Ignatov, Luc VanGool</a></p>
+<p><a href="http://cocodataset.org/#home">Common objects in Context, COCO Consortium</a></p>
+<p><a href="https://www.sicara.ai/blog/2018-03-20-GAN-with-Keras-application-to-image-deblurring">A Generative Adversarial Networks tutorial applied to Image Deblurring with the Keras library, Raphaël</a></p>                </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
                     <h1>Other articles</h1>
