@@ -67,7 +67,7 @@ Here the main code for defining both generator and discriminator will be present
 
 ## Architecture
 
-The images below are the best way to see the architecture of the network, if you want to read more about the architecture of this network be sure to read the paper [Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network] (https://arxiv.org/abs/1609.04802)
+The images below are the best way to see the architecture of the network, if you want to read more about the architecture of this network be sure to read the paper [Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network](https://arxiv.org/abs/1609.04802)
 ### GAN in general
 
 A generative adversarial network (GAN) is a class of machine learning systems invented by Ian Goodfellow and his colleagues in 2014. Two neural networks contest with each other in a game (in the sense of game theory, often but not always in the form of a zero-sum game). Given a training set, this technique learns to generate new data with the same statistics as the training set. For example, a GAN trained on photographs can generate new photographs that look at least superficially authentic to human observers, having many realistic characteristics. Though originally proposed as a form of generative model for unsupervised learning, GANs have also proven useful for semi-supervised learning, fully supervised learning, and reinforcement learning. In a 2016 seminar, Yann LeCun described GANs as "the coolest idea in machine learning in the last twenty years".
@@ -260,7 +260,7 @@ The results below are output of the network after roughly 1900 epochs of trainin
 
 # References
 
-[Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network] (https://arxiv.org/abs/1609.04802)
+[Photo-Realistic Single Image Super-Resolution Using a GenerativeAdversarial Network](https://arxiv.org/abs/1609.04802)
 
 [Hyeongchan Kim, Awesome-GANs with Tensorflow, (2018), GitHub repository](https://github.com/kozistr/Awesome-GANs)
 
