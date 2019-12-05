@@ -5,10 +5,6 @@
         <title>Ondřej Naňka - Technology</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Ondřej Naňka Atom Feed" />
-
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
 </head>
 
 <body id="index" class="home">
@@ -26,106 +22,64 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/github-pelican.html">Pelican with Github</a></h1>
+                    <h1 class="entry-title"><a href="/srgan.html">SRGAN for video</a></h1>
 <footer class="post-info">
-        <abbr class="published" title="2018-05-07T19:03:00+02:00">
-                Published: Po 07 květen 2018
+        <abbr class="published" title="2019-12-05T09:01:00+01:00">
+                Published: Thu 05 December 2019
         </abbr>
 		<br />
-        <abbr class="modified" title="2018-05-07T19:05:00+02:00">
-                Updated: Po 07 květen 2018
+        <abbr class="modified" title="2019-12-05T09:01:00+01:00">
+                Updated: Thu 05 December 2019
         </abbr>
 
         <address class="vcard author">
                 By                         <a class="url fn" href="/author/ondrej-nanka.html">Ondřej Naňka</a>
         </address>
 <p>In <a href="/category/technology.html">Technology</a>.</p>
-<p>tags: <a href="/tag/python.html">python</a> <a href="/tag/pelican.html">pelican</a> <a href="/tag/github.html">github</a> </p>
-</footer><!-- /.post-info --><p>Hello fellaz, I am sure you would love to make a wonder page like this one using Pelican and Github. Let's do it!</p>
-<p>You will need a Linux machine with python and pip and a regular Github user account.  </p>
-<h1>STEP BY STEP</h1>
-<p>First you need to create a repo named YOUR_GITHUB_USERNAME.github.io</p>
-<p>Clone it to your local linux machine</p>
-<div class="highlight"><pre><span></span>git clone https://github.com/YOUR_GITHUB_USERNAME/YOUR_GITHUB_USERNAME.github.io.git
-<span class="c1">#mine was like this</span>
-<span class="c1">#git clone git@github.com:Ondrysak/ondrysak.github.io.git</span>
+<p>tags: <a href="/tag/technology.html">technology</a> <a href="/tag/ml.html">ml</a> <a href="/tag/gan.html">gan</a> <a href="/tag/srgan.html">srgan</a> </p>
+</footer><!-- /.post-info --><h1>Introduction</h1>
+<p>The highly challenging task of estimating a high-resolution (HR) image from its
+low-resolution (LR)counterpart is referred to as super-resolution (SR). SR
+received substantial attention from within the computer vision research
+community and has a wide range of applications. This post will guide you trough the process of using SRGAN for this task.</p>
+<h1>Preprocessing</h1>
+<p>Data data data</p>
+<h2>Cropping</h2>
+<p>First we need to crop the images to 200*200 pixels, because bigger images caused our hardware to run out of memory.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="kn">from</span> <span class="nn">resizeimage</span> <span class="kn">import</span> <span class="n">resizeimage</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;drive/My Drive/COCO_DATASET&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.jpg&quot;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;drive/My Drive/COCO_DATASET/&#39;</span><span class="o">+</span><span class="nb">file</span><span class="p">,</span> <span class="s1">&#39;r+b&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+              <span class="k">with</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">as</span> <span class="n">image</span><span class="p">:</span>
+                  <span class="n">cover</span> <span class="o">=</span> <span class="n">resizeimage</span><span class="o">.</span><span class="n">resize_crop</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
+                  <span class="n">cover</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;drive/My Drive/COCO_DATASET_CROP2/&quot;</span><span class="o">+</span><span class="nb">file</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+              <span class="k">pass</span>
 </pre></div>
 
 
-<p>Go into the cloned repo</p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> YOUR_GITHUB_USERNAME.github.io
-</pre></div>
+<h2>Downscaling</h2>
+<p>To obtain low resolution images for training we will use bicubic downscaling, see the code below.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">imresize</span>
+<span class="c1"># Takes list of images and provide HR images in form of numpy array</span>
+<span class="k">def</span> <span class="nf">hr_images</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+    <span class="n">images_hr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">images_hr</span>
 
-
-<p>Create a new branch as we want to preserve master for the html output of Pelican</p>
-<div class="highlight"><pre><span></span>git checkout -b pelican
-</pre></div>
-
-
-<p>Install python packages </p>
-<div class="highlight"><pre><span></span>pip install pelican markdown ghp-import
-</pre></div>
-
-
-<p>Run pelican quick start</p>
-<div class="highlight"><pre><span></span>pelican-quickstart
-</pre></div>
-
-
-<p>Something like this should follow</p>
-<div class="highlight"><pre><span></span>&gt; Where do you want to create your new web site? [.] ./
-&gt; What will be the title of this web site? Ondrysak&#39;s blog
-&gt; Who will be the author of this web site? Ondrysak
-&gt; What will be the default language of this web site? [pt] en
-&gt; Do you want to specify a URL prefix? e.g., http://example.com   (Y/n) n
-&gt; Do you want to enable article pagination? (Y/n) y
-&gt; How many articles per page do you want? [10] 10
-&gt; What is your time zone? [Europe/Paris] 
-&gt; Do you want to generate a Fabfile/Makefile to automate generation and publishing? (Y/n) Y 
-&gt; Do you want an auto-reload &amp; simpleHTTP script to assist with theme and site development? (Y/n) n
-&gt; Do you want to upload your website using FTP? (y/N) n
-&gt; Do you want to upload your website using SSH? (y/N) n
-&gt; Do you want to upload your website using Dropbox? (y/N) n
-&gt; Do you want to upload your website using S3? (y/N) n
-&gt; Do you want to upload your website using Rackspace Cloud Files? (y/N) n
-&gt; Do you want to upload your website using GitHub Pages? (y/N) y
-&gt; Is this your personal page (username.github.io)? (y/N) y
-Done. Your new project is available at /home/username/YOUR_GITHUB_USERNAME.github.io
-</pre></div>
-
-
-<p>Go to content folder and create a file <em>first.md</em> in your favorite editor</p>
-<div class="highlight"><pre><span></span><span class="n">Title</span><span class="o">:</span> <span class="n">My</span> <span class="n">first</span> <span class="n">article</span><span class="o">!</span>
-<span class="n">Date</span><span class="o">:</span> <span class="mi">2018</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">07</span> <span class="mi">09</span><span class="o">:</span><span class="mi">01</span>
-<span class="n">Modified</span><span class="o">:</span> <span class="mi">2018</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">07</span> <span class="mi">09</span><span class="o">:</span><span class="mi">01</span>
-<span class="n">Category</span><span class="o">:</span> <span class="n">Technology</span>
-<span class="n">Tags</span><span class="o">:</span> <span class="n">technology</span><span class="o">,</span> <span class="n">dope</span>
-<span class="n">Slug</span><span class="o">:</span> <span class="n">first</span>
-<span class="n">Authors</span><span class="o">:</span> <span class="n">Me</span> <span class="n">myself</span>
-<span class="n">Summary</span><span class="o">:</span> <span class="n">What</span> <span class="k">is</span> <span class="n">love</span><span class="o">?</span>
-
-
-<span class="n">Hello</span> <span class="n">fellaz</span><span class="o">,</span> <span class="k">if</span> <span class="n">u</span> <span class="n">did</span> <span class="n">not</span> <span class="n">hear</span> <span class="n">about</span> <span class="n">love</span> <span class="n">its</span> <span class="n">cool</span><span class="o">!</span>
-</pre></div>
-
-
-<p>To generate html and try the web on localhost go to back to the folder with the generated Makefile</p>
-<div class="highlight"><pre><span></span>make html 
-make serve
-</pre></div>
-
-
-<p>Add, commit and push the changes in the source to the <em>pelican</em> branch</p>
-<div class="highlight"><pre><span></span>git add . <span class="o">&amp;&amp;</span> git commit -m <span class="s1">&#39;first commit to da branch yo&#39;</span> <span class="o">&amp;&amp;</span> git push
-</pre></div>
-
-
-<p>Push the generated html to master using Makefile</p>
-<div class="highlight"><pre><span></span>make github
-</pre></div>
-
-
-<p>Say woohoo and checkout your new page at YOUR_GITHUB_USERNAME.github.io!</p>                </article>
+<span class="c1"># Takes list of images and provide LR images in form of numpy array</span>
+<span class="k">def</span> <span class="nf">lr_images</span><span class="p">(</span><span class="n">images_real</span> <span class="p">,</span> <span class="n">downscale</span><span class="p">):</span>   
+    <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span>  <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images_real</span><span class="p">)):</span>
+        <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imresize</span><span class="p">(</span><span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">],</span> <span class="p">[</span><span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="n">downscale</span><span class="p">,</span> <span class="n">images_real</span><span class="p">[</span><span class="n">img</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="n">downscale</span><span class="p">],</span> <span class="n">interp</span><span class="o">=</span><span class="s1">&#39;bicubic&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">None</span><span class="p">))</span>
+    <span class="n">images_lr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">images_lr</span>
+</pre></div>                </article>
             </aside><!-- /#featured -->
                 <section id="content" class="body">
                     <h1>Other articles</h1>
@@ -141,11 +95,11 @@ make serve
                 <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-07T12:01:00+02:00">
-                Published: Po 07 květen 2018
+                Published: Mon 07 May 2018
         </abbr>
 		<br />
         <abbr class="modified" title="2018-05-07T13:01:00+02:00">
-                Updated: Po 07 květen 2018
+                Updated: Mon 07 May 2018
         </abbr>
 
         <address class="vcard author">
@@ -167,11 +121,11 @@ make serve
                 <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2018-05-07T09:01:00+02:00">
-                Published: Po 07 květen 2018
+                Published: Mon 07 May 2018
         </abbr>
 		<br />
         <abbr class="modified" title="2018-05-07T09:01:00+02:00">
-                Updated: Po 07 květen 2018
+                Updated: Mon 07 May 2018
         </abbr>
 
         <address class="vcard author">
