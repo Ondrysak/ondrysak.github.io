@@ -1,10 +1,10 @@
 ---
 title: ImaginaryCTF 2023 - web
-description: Writeup for web forensic challenge
+description: Writeup for web forensics challenge
 date: 2023-12-18
 tldr: We recovered this file from the disk of a potential threat actor. Can you find out what they were up to?
 draft: false
-tags: ["ctf", "writeup", "forensic"]
+tags: ["ctf", "writeup", "forensics"]
 ---
 
 # web
