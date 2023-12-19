@@ -66,7 +66,6 @@ https://ropemporium.com/guide.html
 
 so lets just skip this initial push to `ebp` by adding 8 to the adress skipping some initial instructions of the win function
 
-see `pwn_tool.py` we successfully get to the win function wit the following payload but still a segfault happens - a different one this time.
 
 ```python
 #!/usr/bin/env python3
