@@ -41,7 +41,7 @@ While Novation Circuit Tracks posseses the very same synth engine as OG Circuit,
 
 # Building a dumper
 
-After fiddling with Circulate a bit it seems like it stores the actual patch data as `base64`` encoded string on the source of the page. The idea here is to dump the patches from the page which does not work with Circuit Tracks and load them manually using Novation Components
+After fiddling with Circulate a bit it seems like it stores the actual patch data as `base64` encoded string on the source of the page. The idea here is to dump the patches from the page which does not work with Circuit Tracks and load them manually using Novation Components
 
 
 
