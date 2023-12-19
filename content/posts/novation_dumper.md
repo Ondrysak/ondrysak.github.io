@@ -8,6 +8,8 @@ tags: ["groovebox", "presets", "novation", "circuit", "circulate", "rev"]
 ---
 
 # Novation Circuit OG
+ 
+The OG circuit device which works just fine with Circulate
 
 > An all-in-one studio with two synth tracks, two MIDI tracks and four drum track
 
@@ -16,6 +18,8 @@ tags: ["groovebox", "presets", "novation", "circuit", "circulate", "rev"]
 
 
 # Novation Circuit Tracks 
+
+The newer Circuit Tracks device which in theory should work with circulate too, but does not right now.
 
 > An all-in-one studio with two synth tracks, two MIDI tracks and four drum track
 
@@ -97,7 +101,7 @@ Static_Bass.syx
 SpaceRadio.syx
 ```
 
-now you can just open you https://components.novationmusic.com/ and load the patches into a pack and use them. This method still leaves a lot to be desired, but it is a decent workaround until the author of https://circulate.neuma.studio/ managed to fix it properly, unfortunately there is not support from Novation for this so it may never happen.
+now you can just open your https://components.novationmusic.com/ load the patches into a pack and use them. This method still leaves a lot to be desired, but it is a decent workaround until the author of https://circulate.neuma.studio/ manages to fix it properly, unfortunately there is no support from Novation for this so it may never happen.
 
 Up to date code is also available on github  https://github.com/Ondrysak/circulate_dump
 
