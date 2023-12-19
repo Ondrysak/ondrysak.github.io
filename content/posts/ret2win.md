@@ -12,7 +12,9 @@ tags: ["ctf", "writeup", "pwn"]
 Can you overflow the buffer and get the flag? (Hint: if your exploit isn't working on the remote server, look into stack alignment)
 
 Attachments
-https://imaginaryctf.org/r/BoCID#vuln https://imaginaryctf.org/r/73iLJ#vuln.c nc ret2win.chal.imaginaryctf.org 1337
+https://imaginaryctf.org/r/BoCID#vuln
+https://imaginaryctf.org/r/73iLJ#vuln.c 
+`nc ret2win.chal.imaginaryctf.org 1337`
 
 
 # lets find where the entrypoint to the function win is 
@@ -31,8 +33,11 @@ setting a breakpointin edb at the ret on the end of main we see that this leads 
 return to `0x3434343334323431`
 
 
-# 
+# checking for any security hardening in the executable
 
+We try to use `hardening-check` to see what is enabled
+
+```
 hardening-check vuln
 vuln:
  Position Independent Executable: no, normal executable!
@@ -42,7 +47,7 @@ vuln:
  Immediate binding: no, not found!
  Stack clash protection: unknown, no -fstack-clash-protection instructions found
  Control flow integrity: yes
-
+```
 
 ## Executing the win function
 
