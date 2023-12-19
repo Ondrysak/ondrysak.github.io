@@ -77,7 +77,9 @@ For example, if you have a URL like: `http://idoriot-revenge.chal.imaginaryctf.o
 
 ### username
 
-`preg_match("/".$admin['username']."/", $_SESSION['username'])`
+```
+preg_match("/".$admin['username']."/", $_SESSION['username'])
+```
 
 username contains the substring `admin` easy we just can create username like `kakadmin` to pass.
 
