@@ -40,7 +40,7 @@ Begin by crafting a marinade in a spacious bowl, combining yogurt, minced garlic
 ![Almost like tandoor](/images/bake_chicken.png)
 
 
-Preheat the broiler and line an expansive baking sheet with foil. Arrange the marinated chicken on the sheet, crowning it with a touch of butter. Broil with vigilant attention until the chicken achieves a tantalizing char and thorough doneness, approximately 15 minutes. Allow the charred chicken to cool briefly.
+Preheat the broiler and the marinated chicken on the sheet, crowning it with a touch of butter. Broil with vigilant attention until the chicken achieves a tantalizing char and thorough doneness, approximately 15 minutes. Allow the charred chicken to cool briefly.
 
 ## Crafting the Sauce
 Meticulously dice two onions and sauté them in butter until they attain a sumptuous golden brown hue. Introduce a hint of minced garlic and a touch of garam masala, allowing the flavors to harmonize briefly. Incorporate a can of crushed tomatoes and allow the mixture to simmer to perfection. Employ a hand blender to transform this medley into a lusciously smooth sauce, adjusting the seasoning with salt and pepper to achieve an ideal balance.
