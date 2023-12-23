@@ -14,23 +14,17 @@ Butter Chicken, or Murgh Makhani, stands as one of the most cherished curries in
 
 ## Ingredients 
 
-* 2 pounds (about 900g) boneless, skinless chicken, cut into cubes
-* 1 cup plain yogurt
+* about 900g boneless, skinless chicken, cut into cubes (I prefer breast)
+* 100g of plain yogurt
 * 4 cloves garlic, minced
 * 2 tablespoons lemon juice
 * 1 tablespoon garam masala
 * 1 tablespoon ginger, finely grated
-* 1 teaspoon salt
 * 1 teaspoon chili powder
-* 2 tablespoons butter
-* 2 onions, finely chopped
-* 3 tablespoons butter
-* 2 teaspoons minced garlic
-* 1 teaspoon garam masala
-* 1 can (14 ounces) crushed tomatoes
+* 2 yellow onions, finely chopped
+* 400g can of crushed tomatoes
 * Salt and pepper to taste
-* 1 cup heavy cream
-* 1/2 cup cold butter
+* 250ml heavy cream
 * Fresh naans or white basmati rice
 * Fresh coriander for garnish (optional)
 
