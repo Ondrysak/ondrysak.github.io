@@ -410,14 +410,7 @@ jq '.members[] | {current_age: .age, superheroname: .name, is_cool: true, first_
 ```
 
 
-
-
-
-## Conclusion 
-
-JSON is a widely employed structured data format typically used in most modern APIs and data services. Unfortunately, shells such as `bash` have now good way of working with structured data like JSON directly. This means that working with JSON via the command line can be painful, just as trying to parse HTML with regex is. You can fix this awkwardness by using `jq` a cool command-line processor for JSON.
-
-This was more of a hands on introduction to basics of `jq` for a more formal introduction I really recommend reading trough `man jq` and also this in-browser interactive `jq` guide https://ishan.page/blog/2023-11-06-jq-by-example/
+## Other tools
 
 There is many more like `jq` for other common formats like `XML`, `yaml`, `toml`, `csv` etc.
 
@@ -425,5 +418,12 @@ There is many more like `jq` for other common formats like `XML`, `yaml`, `toml`
 - Python `yq` jq wrapper for YAML, XML, TOML documents https://kislyuk.github.io/yq/
 - `xmlstar` for `XML` https://xmlstar.sourceforge.net/doc/UG/xmlstarlet-ug.html
 - `xsv` for `csv` https://github.com/BurntSushi/xsv 
+
+## Conclusion 
+
+JSON is a widely employed structured data format typically used in most modern APIs and data services. Unfortunately, shells such as `bash` have no good way of working with structured data like JSON directly. This means that working with JSON via the command line can be painful, just as trying to parse HTML with regex is. You can fix this awkwardness by using `jq` a cool command-line processor for JSON.
+
+This was more of a hands on introduction to basics of `jq` for a more formal introduction I really recommend reading trough `man jq` and also this in-browser interactive `jq` guide https://ishan.page/blog/2023-11-06-jq-by-example/
+
 
 Now the key takeaway here is that using the right tool for the job instead of trying to hack something together with just pure `bash` or whatever you favourite shell is may make you life significantly less miserable. 
