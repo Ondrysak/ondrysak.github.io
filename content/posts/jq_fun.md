@@ -148,7 +148,7 @@ jq '.members' superherosquad.json
 
 ## Selecting first superhero from the superhero array
 
-Now to select only the first member of the superhero array we can do `.members[0]`
+Now to select only the first member of the superhero array we can do 
 
 ```bash
 jq '.members[0]' superherosquad.json
@@ -170,7 +170,12 @@ jq '.members[0]' superherosquad.json
 
 ## Array slicing 
 
-We can use array slicing syntax when accessing array, if we want to work with subarray based on the indexes like this `[1:3]` will be of length 2, containing the elements from index 1 (inclusive) to index 3 (exclusive).
+We can use array slicing syntax when accessing array, if we want to work with subarray based on the indexes like this 
+
+```
+[1:3]
+```
+will be of length 2, containing the elements from index 1 (inclusive) to index 3 (exclusive).
 
 ```bash
 jq '.members[1:3]' superherosquad.json
@@ -207,8 +212,11 @@ jq '.members[1:3]' superherosquad.json
 
 ## Selecting first superpower of the first superhero
 
-Similarly if we wanted to get the first superpower of the first superhero we can simply continue using this syntax chaining it together like so `.members[0].powers[0]`
+Similarly if we wanted to get the first superpower of the first superhero we can simply continue using this syntax chaining it together like so 
 
+```
+.members[0].powers[0]
+```
 
 ```bash
  jq '.members[0].powers[0]' superherosquad.json
@@ -220,7 +228,11 @@ Similarly if we wanted to get the first superpower of the first superhero we can
 
 ## Getting age of all superheros
 
-Now we may be intrested in a just a single field from the superhero array like age, we can simply do the by doing `.members[].age`
+Now we may be intrested in a just a single field from the superhero array like age, we can simply do the by doing 
+
+```
+.members[].age
+```
 
 ```bash
 jq '.members[].age' superherosquad.json
@@ -301,7 +313,11 @@ jq '.members | map(select(.age <= 100)) | max_by(.age)' superherosquad.json
 
 ## Regex matching
 
-Just as we were able to filter for heroes that are not older than 100, we can also do regex matching to select only matching entries, so lets find all heroes with name matching regex `[dl]{1}ame`
+Just as we were able to filter for heroes that are not older than 100, we can also do regex matching to select only matching entries, so lets find all heroes with name matching regex 
+
+```
+[dl]{1}ame
+```
 
 ```bash
 jq '.members | map(select(.name | test("[dl]{1}ame")))' superherosquad.json
