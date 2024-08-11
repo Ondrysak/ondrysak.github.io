@@ -117,7 +117,7 @@ void __cdecl overwrite_entry(exit_function_list *entry, void *addr, void *arg)
 }
 ```
 
-##  Registering a functions to be execude on exit
+##  Registering a functions to be executed on exit
 
 After reading a the code above a bit we start stepping trough the code and notice that all the stuff we computed earlier actually gets executed **after** `exit(5)` is called, that's unusual to say at least. Reading the glibc source reveals a but more about what is happening here.
 
