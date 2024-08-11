@@ -98,7 +98,7 @@ exit_function_list *__cdecl get_exit_func_entry()
 ```
 
 
-now the `overwrite_entry` function seems to be the meat and potatoes of this challenge. We seems to be computing some pointers and stacking them in some list. But we need to investigate further to understand why and how, notice that so far we do not see the functions being executed in any way, which is suspicious as after these are executed multiple time the only other thing that is called is `exit(5)` at the very end of main.
+now the `overwrite_entry` function seems to be the meat and potatoes of this challenge. We seem to be computing some pointers and stacking them in some list. But we need to investigate further to understand why and how, notice that so far we do not see the functions being executed in any way, which is suspicious as after `overwrite_entry` is executed multiple times in a loop the only other thing that is called is `exit(5)` at the very end of `main`.
 
 ```C
 void __cdecl overwrite_entry(exit_function_list *entry, void *addr, void *arg)
@@ -467,7 +467,7 @@ pwndbg> print table[9]+0x100
 $15 = (void *) 0x5555555552af <gadjet>
 ```
 
-ok, thats nice the first three pointer are actuall pointing to functions which even make sense for our challenge, but whats up with the remaining 6 and the last one? Let's look into `gadjet` first as we see it defined in our binary. It's the function that does the final comparison of the changes we made to the `buffer` where we save the `gets` input and applying modifications after.
+ok, thats nice the first three pointers are actuall pointing to beginning of some reasonable functions which even make sense for our challenge, but whats up with the remaining 6 and the last one? Let's look into `gadjet` first as we see it defined in our binary. It's the function that does the final comparison of the changes we made to the `buffer` where we save the `gets` input and applying modifications after.
 
 ```C
 void __cdecl gadjet(void *buffer)
@@ -479,7 +479,7 @@ void __cdecl gadjet(void *buffer)
 }
 ```
 
-Now we have a mental map of whats happening there the functions go like this 
+Now we have a mental map of whats happening there the order functions/gadgets are executed on `exit(5)` goes like this 
 
 - `gets` is called to read the flag from user into `buffer`
 - gadgets from `libc` are called while iterating over the input stored in `buffer`
@@ -490,23 +490,29 @@ Now let's try to inspect the gadgets in libc to see what they actually are. We n
 > ROR Instruction : ROR destination, count. The ROR instruction shifts each bit to the right, with the lowest bit copied in the Carry flag and into the highest bit. 
 
 ```bash
-pwndbg> x/i table[3]+0x100
+pwndbg> x/2i table[3]+0x100
    0x7ffff7f2e402:      ror    BYTE PTR [rdi],0x95
-pwndbg> x/i table[4]+0x100
+   0x7ffff7f2e405:      ret
+pwndbg> x/2i table[4]+0x100
    0x7ffff7f2cf34:      ror    BYTE PTR [rdi],0x89
-pwndbg> x/i table[5]+0x100
+   0x7ffff7f2cf37:      ret
+pwndbg> x/2i table[5]+0x100
    0x7ffff7f08cf3 <gethostbyname_r+419>:        ror    BYTE PTR [rdi],0x85
-pwndbg> x/i table[6]+0x100
+   0x7ffff7f08cf6 <gethostbyname_r+422>:        ret
+pwndbg> x/2i table[6]+0x100
    0x7ffff7de5ce0 <setlocale+1584>:     ror    BYTE PTR [rdi],0x84
-pwndbg> x/i table[7]+0x100
+   0x7ffff7de5ce3 <setlocale+1587>:     ret
+pwndbg> x/2i table[7]+0x100
    0x7ffff7ec7106 <ttyname_r+134>:      ror    BYTE PTR [rdi],0x88
-pwndbg> x/i table[8]+0x100
+   0x7ffff7ec7109 <ttyname_r+137>:      ret
+pwndbg> x/2i table[8]+0x100
    0x7ffff7eba99b:      ror    BYTE PTR [rdi],0x8e
+   0x7ffff7eba99e:      ret
 ```
 
 ## Conclusion - Solve script 
 
-Now we finally understand the mechanism used to encode the flag, fortunately for us the rotation operation can be easily reversed, simply by rotating the other direction. For convinience we can try implementing that all that in python, even tho PIE is enabled and pointers are mangled we managed to restore all the information needed by using `gdb` to dynamically analyze the binary after we understood enough about it by doing static analysis first. 
+Now we finally understand the mechanism used to encode the flag, fortunately for us the rotation operation can be easily reversed, simply by rotating the other direction. For convinience we can try implementing that all that in python, even tho PIE is enabled and pointers are mangled we managed to restore all the information needed by using `gdb` to dynamically analyze the binary after we understood enough about it by doing static analysis first. ChatGPT did a solid job of writing the code for us.
 
 
 ```python
