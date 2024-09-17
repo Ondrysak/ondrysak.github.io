@@ -1,6 +1,6 @@
 
 ---
-title: Exploiting RSA with a Quadratic Leak
+title: m0leCon CTF 2025 Teaser - Exploiting RSA with a Quadratic Leak
 description: Writeup on exploiting an RSA vulnerability using a leak in quadratic form.
 date: 2024-09-15
 tldr: Factoring RSA modulus using a quadratic leak.
