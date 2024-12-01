@@ -1,7 +1,7 @@
 
 ---
 title: hkcert CTF 2024 - Void
-description: Reversig whitespace obfusacated javascript
+description: Reversing whitespace obfusacated javascript
 date: 2024-11-09
 tldr: Solve of a javascript rev challenge.
 draft: false
@@ -11,7 +11,7 @@ tags: ["ctf", "writeup", "rev", "javascript", "invisible"]
 ## Initial analysis
 
 > I made a simple webpage that checks whether the flag is correct... Wait, where are the flag-checking functions?
-
+    
 
 After inspecting the source of the web page - we pretty much see nothing... scrolling all the way down we see a fairly dense piece of javascript, looking around a bit we see eventually figure out that this is "packed" by `invisible`.
 
