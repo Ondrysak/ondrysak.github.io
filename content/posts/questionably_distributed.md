@@ -1,29 +1,51 @@
 ---
 title: ImaginaryCTF - Questionably-Distributed
-description: Writeup for questionably-distributed reverse engineering challenge
+description: First blood writeup for questionably-distributed reverse engineering challenge using IDA Pro MCP server
 date: 2025-09-30
-tldr: A distributed system challenge where multiple servers obfuscate a simple transformation. The flag is hidden in the main diagonal of a 28×28 lookup table after applying XOR and arithmetic operations.
+tldr: A distributed system challenge where multiple servers obfuscate a simple transformation. We first blooded this hard difficulty challenge using the IDA Pro MCP server for automated analysis. The flag is hidden in the main diagonal of a 28×28 lookup table after applying XOR and arithmetic operations.
 draft: false
-tags: ["ctf", "writeup", "reverse-engineering", "ida-pro"]
+tags: ["ctf", "writeup", "reverse-engineering", "ida-pro", "mcp", "first-blood"]
 ---
 
 # Questionably-Distributed Challenge Writeup
 
 ## Challenge Overview
 
-**Challenge Name:** questionably-distributed  
-**Category:** Reverse Engineering  
-**Difficulty:** Medium  
+**Challenge Name:** questionably-distributed
+**Category:** Reverse Engineering
+**Difficulty:** Hard
+**Points:** 418pts
+**Solves:** 32
+**Author:** Minerva-007
 **Flag:** `ictf{51ngl3_4PP_mul71pl3_53rv1c35}`
+**Achievement:** 🩸 **First Blood!**
+
+### Challenge Description
+
+> Distributed computing is the new tech on the horizon, so I decided to distribute the computer itself. Enjoy this horrendous simulation of a CPU running locally over TCP. This is not a steg chall.
+
+## The MCP Server Advantage
+
+For this challenge, I used the **IDA Pro MCP (Model Context Protocol) server** to automate the reverse engineering process. MCP is a protocol that allows AI assistants to interact with tools like IDA Pro programmatically, enabling automated analysis, renaming, and annotation of binaries.
+
+The IDA Pro MCP server implementation I used is based on the work described in [Wil Gibbs' blog post about DEF CON Finals MCP](https://wilgibbs.com/blog/defcon-finals-mcp/). This approach allowed me to:
+
+- Automatically retrieve function decompilations
+- Programmatically rename variables and functions
+- Add comments and annotations
+- Extract data structures and binary data
+- Perform complex analysis without manual clicking
+
+This automated workflow was key to achieving **first blood** on this hard difficulty challenge - the combination of AI-assisted analysis and MCP automation allowed for rapid understanding of the binary's behavior.
 
 ## Initial Analysis
 
 The challenge provides a Windows executable `chal.exe`. Running the binary shows that it starts three different servers on different ports:
 - Port 5555: Lookup table server
-- Port 6666: Arithmetic server  
+- Port 6666: Arithmetic server
 - Port 7777: Comparison server
 
-The binary appears to implement a distributed system with multiple services, hence the name "questionably-distributed".
+The binary appears to implement a distributed system with multiple services, hence the name "questionably-distributed". As the author notes, this is a "horrendous simulation of a CPU running locally over TCP" - essentially distributing basic CPU operations across network services.
 
 ## Reverse Engineering Process
 
@@ -168,8 +190,9 @@ def solve_questionably_distributed(lookup_table_data):
 ## Tools Used
 
 - **IDA Pro**: For reverse engineering and static analysis
+- **IDA Pro MCP Server**: For automated binary analysis and AI-assisted reverse engineering ([Wil Gibbs' implementation](https://wilgibbs.com/blog/defcon-finals-mcp/))
 - **Python**: For data extraction and transformation
-- **MCP Tools**: For automated IDA Pro interaction
+- **Claude AI with MCP**: For orchestrating the automated analysis workflow
 
 ## Technical Summary
 
@@ -179,12 +202,27 @@ The challenge demonstrates several reverse engineering concepts:
 2. **Data Transformation**: Recognizing XOR and arithmetic operations in assembly
 3. **Steganography**: Finding hidden data in geometric patterns within data structures
 4. **Static Analysis**: Extracting and analyzing binary data without dynamic execution
+5. **Automated RE**: Using MCP to programmatically interact with IDA Pro for faster analysis
 
 The transformation `(value ^ 66) + 15` was discovered by analyzing the network communication pattern in the main function, where each lookup table value is processed through the arithmetic server.
+
+## Why This Approach Worked for First Blood
+
+The combination of:
+1. **MCP automation** - No manual clicking through IDA Pro
+2. **AI-assisted analysis** - Pattern recognition and hypothesis generation
+3. **Rapid iteration** - Quick testing of different extraction patterns
+4. **Programmatic data extraction** - Automated extraction of the 784-byte lookup table
+
+...allowed me to analyze the binary, understand the algorithm, extract the data, and test multiple geometric patterns in a fraction of the time traditional manual analysis would take. This is the power of combining AI with proper tooling infrastructure.
 
 ## Final Flag
 
 `ictf{51ngl3_4PP_mul71pl3_53rv1c35}`
 
 The flag content "51ngl3_4PP_mul71pl3_53rv1c35" appears to be leetspeak for "single app multiple services", which perfectly describes the challenge's distributed architecture concept.
+
+---
+
+**Note:** Despite the challenge description saying "This is not a steg chall", the flag extraction did involve finding a geometric pattern (main diagonal) in the data - though the real challenge was understanding the distributed architecture and transformation algorithm first!
 
